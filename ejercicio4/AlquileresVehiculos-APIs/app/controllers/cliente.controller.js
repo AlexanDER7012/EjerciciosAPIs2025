@@ -17,7 +17,7 @@ exports.create = (req, res) => {
         email: req.body.correo,
         telefono: req.body.telefono,
         direccion: req.body.direccion,
-        telefono: req.body.telefono,
+        fecha_registro: req.body.fecha_registro,
     };
 
     Cliente.create(cliente)
