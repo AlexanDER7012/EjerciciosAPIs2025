@@ -1,42 +1,43 @@
 const db = require("../models");
-const Cliente = db.clientes;  
+const Vehiculo = db.vehiculos;  
 const Op = db.Sequelize.Op;
 
 
 exports.create = (req, res) => {
-    if (!req.body.nombre) {
+    if (!req.body.marca||!req.body.modelo||!req.body.matricula) {
         res.status(400).send({
-            message: "Content can not be empty!"
+            message: "Content can not be empty: marca, modelo, matricula!"
         });
         return;
     }
 
-    const cliente = {
-        nombre: req.body.nombre,
-        email: req.body.email,
-        telefono: req.body.telefono,
-        direccion: req.body.direccion,
-        
+    const vehiculo = {
+        marca: req.body.marca,
+        modelo: req.body.modelo,
+        anio: req.body.anio,
+        tipo: req.body.tipo,
+        matricula: req.body.matricula,
+        disponible: req.body.disponible,
     };
 
-    Cliente.create(cliente)
+    Vehiculo.create(vehiculo)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Client."
+                    err.message || "Some error occurred while creating the Vehiculo."
             });
         });
 };
 
 
 exports.findAll = (req, res) => {
-    const nombre = req.query.nombre;
-    var condition = nombre ? { nombre: { [Op.iLike]: `%${nombre}%` } } : null;
+    const matricula = req.query.matricula;
+    var condition = matricula ? { matricula: { [Op.iLike]: `%${matricula}%` } } : null;
 
-    Cliente.findAll({ where: condition })
+    Vehiculo.findAll({ where: condition })
         .then(data => {
             res.send(data);
         })
@@ -52,13 +53,13 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Cliente.findByPk(id)
+    Vehiculo.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving Cliente with id=" + id
+                message: "Error retrieving Vehiculo with id=" + id
             });
         });
 };
@@ -66,23 +67,23 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Cliente.update(req.body, {
-        where: { id_cliente: id }
+    Vehiculo.update(req.body, {
+        where: { id_vehiculo: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Cliente was updated successfully."
+                    message: "Vehiculo was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update Client with id=${id}. Maybe Client was not found or req.body is empty!`
+                    message: `Cannot update Vehiculo with id=${id}. Maybe Vehiculo was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating Client with id=" + id
+                message: "Error updating Vehiculo with id=" + id
             });
         });
 };
@@ -91,17 +92,17 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
     
-    Cliente.destroy({
-        where: { id_cliente: id }
+    Vehiculo.destroy({
+        where: { id_vehiculo: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Client was deleted successfully!"
+                    message: "Vehiculo was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete Client with id=${id}. El cliente no fue encontado!`
+                    message: `Cannot delete Vehiculo with id=${id}. El cliente no fue encontado!`
                 });
             }
         })
